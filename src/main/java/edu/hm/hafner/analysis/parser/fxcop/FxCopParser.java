@@ -19,7 +19,6 @@ import edu.hm.hafner.analysis.util.XmlElementUtil;
  *
  * <p> Note that instances of this parser are not thread safe. </p>
  */
-@SuppressWarnings("unused")
 public class FxCopParser extends IssueParser {
     private static final long serialVersionUID = -7208558002331355408L;
 
@@ -42,7 +41,7 @@ public class FxCopParser extends IssueParser {
                 NodeList mainNode = doc.getElementsByTagName("FxCopReport");
 
                 Element rootElement = (Element) mainNode.item(0);
-                parseRules(rootElement, issueBuilder);
+                parseRules(rootElement);
                 parseNamespaces(rootElement, issueBuilder);
                 parseTargets(rootElement, issueBuilder);
 
@@ -50,7 +49,7 @@ public class FxCopParser extends IssueParser {
             }
         }
 
-        private void parseRules(final Element rootElement, final IssueBuilder issueBuilder) {
+        private void parseRules(final Element rootElement) {
             Optional<Element> rulesElement = XmlElementUtil.getFirstChildElementByName(rootElement, "Rules");
             if (rulesElement.isPresent()) {
                 for (Element rule : XmlElementUtil.getChildElementsByName(rulesElement.get(), "Rule")) {
@@ -63,32 +62,27 @@ public class FxCopParser extends IssueParser {
             Optional<Element> targetsElement = XmlElementUtil.getFirstChildElementByName(rootElement, "Targets");
             if (targetsElement.isPresent()) {
                 for (Element target : XmlElementUtil.getChildElementsByName(targetsElement.get(), "Target")) {
-                    String name = getString(target, "Name");
-                    parseMessages(target, name, issueBuilder);
-                    parseModules(target, name, issueBuilder);
-                    parseResources(target, name, issueBuilder);
+                    parseMessages(target, issueBuilder);
+                    parseModules(target, issueBuilder);
+                    parseResources(target, issueBuilder);
                 }
             }
         }
 
-        private void parseResources(final Element target, final String parentName,
-                final IssueBuilder issueBuilder) {
+        private void parseResources(final Element target, final IssueBuilder issueBuilder) {
             Optional<Element> resources = XmlElementUtil.getFirstChildElementByName(target, "Resources");
             if (resources.isPresent()) {
                 for (Element resource : XmlElementUtil.getChildElementsByName(resources.get(), "Resource")) {
-                    String name = getString(resource, "Name");
-                    parseMessages(resource, name, issueBuilder);
+                    parseMessages(resource, issueBuilder);
                 }
             }
         }
 
-        private void parseModules(final Element target, final String parentName,
-                final IssueBuilder issueBuilder) {
+        private void parseModules(final Element target, final IssueBuilder issueBuilder) {
             Optional<Element> modulesElement = XmlElementUtil.getFirstChildElementByName(target, "Modules");
             if (modulesElement.isPresent()) {
                 for (Element module : XmlElementUtil.getChildElementsByName(modulesElement.get(), "Module")) {
-                    String name = getString(module, "Name");
-                    parseMessages(module, name, issueBuilder);
+                    parseMessages(module, issueBuilder);
                     parseNamespaces(module, issueBuilder);
                 }
             }
@@ -100,7 +94,7 @@ public class FxCopParser extends IssueParser {
                 for (Element namespace : XmlElementUtil.getChildElementsByName(namespacesElement.get(), "Namespace")) {
                     String name = getString(namespace, "Name");
 
-                    parseMessages(namespace, name, issueBuilder);
+                    parseMessages(namespace, issueBuilder);
                     parseTypes(namespace, name, issueBuilder);
                 }
             }
@@ -113,7 +107,7 @@ public class FxCopParser extends IssueParser {
                 for (Element type : XmlElementUtil.getChildElementsByName(types.get(), "Type")) {
                     String name = parentName + "." + getString(type, "Name");
 
-                    parseMessages(type, name, issueBuilder);
+                    parseMessages(type, issueBuilder);
                     parseMembers(type, name, issueBuilder);
                 }
             }
@@ -139,26 +133,23 @@ public class FxCopParser extends IssueParser {
             }
         }
 
-        private void parseMember(final Element member, final String parentName,
-                final IssueBuilder issueBuilder) {
-            parseMessages(member, parentName, issueBuilder);
+        private void parseMember(final Element member, final String parentName, final IssueBuilder issueBuilder) {
+            parseMessages(member, issueBuilder);
             parseAccessors(member, parentName, issueBuilder);
         }
 
-        private void parseMessages(final Element messages, final String parentName,
-                final IssueBuilder issueBuilder) {
+        private void parseMessages(final Element messages, final IssueBuilder issueBuilder) {
             Optional<Element> messagesElement = XmlElementUtil.getFirstChildElementByName(messages, "Messages");
             if (messagesElement.isPresent()) {
                 for (Element message : XmlElementUtil.getChildElementsByName(messagesElement.get(), "Message")) {
                     for (Element issue : XmlElementUtil.getChildElementsByName(message, "Issue")) {
-                        parseIssue(issue, message, parentName, issueBuilder);
+                        parseIssue(issue, message, issueBuilder);
                     }
                 }
             }
         }
 
-        private void parseIssue(final Element issue, final Element parent, final String parentName,
-                final IssueBuilder issueBuilder) {
+        private void parseIssue(final Element issue, final Element parent, final IssueBuilder issueBuilder) {
             String typeName = getString(parent, "TypeName");
             String category = getString(parent, "Category");
             String checkId = getString(parent, "CheckId");
@@ -198,9 +189,7 @@ public class FxCopParser extends IssueParser {
             if (element.hasAttribute(name)) {
                 return element.getAttribute(name);
             }
-            else {
-                return "";
-            }
+            return "";
         }
     }
 }
