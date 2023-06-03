@@ -347,7 +347,7 @@ public class Issue implements Serializable {
         }
         this.lineRanges = new LineRangeList();
         if (lineRanges != null) {
-            this.lineRanges.addAll(lineRanges);
+            lineRanges.forEach(this.lineRanges::add);
         }
         this.category = StringUtils.defaultString(category).intern();
         this.type = defaultString(type);

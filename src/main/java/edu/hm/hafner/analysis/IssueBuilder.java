@@ -475,7 +475,7 @@ public class IssueBuilder implements AutoCloseable {
         columnStart = copy.getColumnStart();
         columnEnd = copy.getColumnEnd();
         lineRanges = new LineRangeList();
-        lineRanges.addAll(copy.getLineRanges());
+        copy.getLineRanges().forEach(lineRanges::add);
         category = copy.getCategory();
         type = copy.getType();
         severity = copy.getSeverity();

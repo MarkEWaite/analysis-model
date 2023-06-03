@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.stream.StreamSupport;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -34,7 +33,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class LineRangeList extends AbstractList<LineRange> implements Serializable {
     private static final long serialVersionUID = -1123973098942984623L;
     private static final int DEFAULT_CAPACITY = 16;
-    private static final boolean SEQUENTIAL = false;
 
     /** Encoded bits. */
     private byte[] data;
@@ -83,35 +81,6 @@ public class LineRangeList extends AbstractList<LineRange> implements Serializab
         this(initialElements.length * 4); // guess
 
         addAll(Arrays.asList(initialElements));
-    }
-
-    @Override
-    public final boolean addAll(final Collection<? extends LineRange> c) {
-        return super.addAll(c);
-    }
-
-    /**
-     * Appends all of the elements in the specified collection to the end of this list, in the order that they are
-     * returned by the specified collection's iterator (optional operation).  The behavior of this operation is
-     * undefined if the specified collection is modified while the operation is in progress.  (Note that this will occur
-     * if the specified collection is this list, and it's nonempty.)
-     *
-     * @param ranges
-     *         collection containing elements to be added to this list
-     *
-     * @return {@code true} if this list changed as a result of the call
-     * @throws NullPointerException
-     *         if the specified collection contains one or more null elements and this list does not permit null
-     *         elements, or if the specified collection is null
-     * @throws IllegalArgumentException
-     *         if some property of an element of the specified collection prevents it from being added to this list
-     * @see #add(Object)
-     */
-    public final boolean addAll(final Iterable<? extends LineRange> ranges) {
-        return StreamSupport.stream(ranges.spliterator(), SEQUENTIAL)
-                .map(this::add)
-                .reduce(Boolean::logicalOr)
-                .orElse(false);
     }
 
     /**
