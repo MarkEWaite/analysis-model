@@ -79,14 +79,21 @@ class SeverityTest {
                 .containsExactlyInAnyOrder(Severity.ERROR, Severity.WARNING_HIGH, Severity.WARNING_NORMAL, Severity.WARNING_LOW);
     }
 
-    @ParameterizedTest(name = "[{index}] Default severity = {0}")
-    @ValueSource(strings = "error, high, normal, low")
-    void shouldConvertToDefault(final String severityValue) {
+    @Test
+    void shouldConvertIllegalToDefault() {
         assertThat(Severity.valueOf(null, Severity.WARNING_LOW)).isSameAs(Severity.WARNING_LOW);
         assertThat(Severity.valueOf("wrong-name", Severity.WARNING_LOW)).isSameAs(Severity.WARNING_LOW);
 
         for (Severity valid : Severity.getPredefinedValues()) {
             assertThat(Severity.valueOf(valid.getName(), Severity.ERROR)).isSameAs(valid);
+        }
+    }
+
+    @ParameterizedTest(name = "[{index}] Default severity = {0}")
+    @ValueSource(strings = "error, high, normal, low")
+    void shouldConvertToDefault(final String severityValue) {
+        for (Severity valid : Severity.getPredefinedValues()) {
+            assertThat(Severity.valueOf(severityValue, valid)).isSameAs(valid);
         }
     }
 
