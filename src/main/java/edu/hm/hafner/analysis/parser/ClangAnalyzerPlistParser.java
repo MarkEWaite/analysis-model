@@ -17,6 +17,7 @@ import edu.hm.hafner.analysis.IssueParser;
 import edu.hm.hafner.analysis.ParsingException;
 import edu.hm.hafner.analysis.ReaderFactory;
 import edu.hm.hafner.analysis.Report;
+import edu.hm.hafner.analysis.util.IntegerParser;
 import edu.hm.hafner.analysis.util.XmlElementUtil;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -27,7 +28,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class ClangAnalyzerPlistParser extends IssueParser {
     private static final long serialVersionUID = 1L;
-    static final String ID = "ClangAnalyzer Plist Parser";
 
     @Override
     public boolean accepts(final ReaderFactory readerFactory) {
@@ -127,6 +127,6 @@ public class ClangAnalyzerPlistParser extends IssueParser {
 
     private static int extractIntField(final Element diag, final XPathExpression expr) throws XPathExpressionException {
         String val = extractField(diag, expr);
-        return Integer.parseInt(val);
+        return IntegerParser.parseInt(val);
     }
 }

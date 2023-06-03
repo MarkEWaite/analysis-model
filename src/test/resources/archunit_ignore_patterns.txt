@@ -5,3 +5,9 @@
 
 // Assertions.assertTimeoutPreemptively from JUnit 5 is ok to use
 .*org.junit.jupiter.api.Assertions.assertTimeoutPreemptively.*
+
+// Exception will be handled
+Method <edu.hm.hafner.analysis.registry.DryDescriptor.convertThreshold.*
+
+// This is the code that is used to parse the integer values
+Method <edu.hm.hafner.analysis.util.IntegerParser.parseInt.*

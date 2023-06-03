@@ -15,6 +15,7 @@ import edu.hm.hafner.analysis.ParsingException;
 import edu.hm.hafner.analysis.ReaderFactory;
 import edu.hm.hafner.analysis.Report;
 import edu.hm.hafner.analysis.Severity;
+import edu.hm.hafner.analysis.util.IntegerParser;
 import edu.hm.hafner.analysis.util.XmlElementUtil;
 
 /**
@@ -43,7 +44,7 @@ public class IdeaInspectionParser extends IssueParser {
                 if (problemClass.isPresent()) {
                     Element problem = problemClass.get();
                     issueBuilder.setFileName(stripPathPrefix(file))
-                            .setLineStart(Integer.parseInt(getChildValue(element, "line")))
+                            .setLineStart(IntegerParser.parseInt(getChildValue(element, "line")))
                             .setCategory(StringEscapeUtils.unescapeXml(getValue(problem)))
                             .setMessage(StringEscapeUtils.unescapeXml(getChildValue(element, "description")))
                             .setModuleName(StringEscapeUtils.unescapeXml(getChildValue(element, "module")))

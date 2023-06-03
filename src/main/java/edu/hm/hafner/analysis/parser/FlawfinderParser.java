@@ -7,6 +7,7 @@ import edu.hm.hafner.analysis.Issue;
 import edu.hm.hafner.analysis.IssueBuilder;
 import edu.hm.hafner.analysis.LookaheadParser;
 import edu.hm.hafner.analysis.Severity;
+import edu.hm.hafner.analysis.util.IntegerParser;
 import edu.hm.hafner.util.LookaheadStream;
 
 /**
@@ -35,7 +36,7 @@ public class FlawfinderParser extends LookaheadParser {
             final IssueBuilder builder) {
         String message = matcher.group("message");
         String category = matcher.group("category");
-        int severity = Integer.parseInt(matcher.group("severity"));
+        int severity = IntegerParser.parseInt(matcher.group("severity"));
         Severity priority = Severity.WARNING_LOW;
 
         if (severity >= FLAWFINDER_HIGH_THRESHOLD) {

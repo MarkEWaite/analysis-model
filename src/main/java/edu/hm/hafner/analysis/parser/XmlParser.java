@@ -18,6 +18,7 @@ import edu.hm.hafner.analysis.ParsingException;
 import edu.hm.hafner.analysis.ReaderFactory;
 import edu.hm.hafner.analysis.Report;
 import edu.hm.hafner.analysis.Severity;
+import edu.hm.hafner.analysis.util.IntegerParser;
 import edu.hm.hafner.analysis.util.XmlElementUtil;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -127,21 +128,23 @@ public class XmlParser extends IssueParser {
                 Element endNode = (Element) path.evaluate(LINE_RANGE_END, lineRangeNode, XPathConstants.NODE);
                 if (startNode != null && startNode.getFirstChild() != null
                         && endNode != null && endNode.getFirstChild() != null) {
-                    String startValue = startNode.getFirstChild().getNodeValue().trim();
-                    String endValue = endNode.getFirstChild().getNodeValue().trim();
-                    try {
-                        int start = Integer.parseInt(startValue);
-                        int end = Integer.parseInt(endValue);
-                        ranges.add(new LineRange(start, end));
-                    }
-                    catch (NumberFormatException e) {
-                        // Invalid value in xml.
-                    }
-
+                    handleLineRange(startNode, endNode, ranges);
                 }
             }
         }
         return ranges;
+    }
+
+    private void handleLineRange(final Element startNode, final Element endNode, final LineRangeList ranges) {
+        String startValue = startNode.getFirstChild().getNodeValue().trim();
+        int start = IntegerParser.parseInt(startValue);
+
+        String endValue = endNode.getFirstChild().getNodeValue().trim();
+        int end = IntegerParser.parseInt(endValue);
+
+        if (start > 0 && end > 0) {
+            ranges.add(new LineRange(start, end));
+        }
     }
 }
 

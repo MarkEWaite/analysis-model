@@ -12,6 +12,9 @@ import com.tngtech.archunit.lang.ArchRule;
 
 import edu.hm.hafner.util.ArchitectureRules;
 
+import static com.tngtech.archunit.core.domain.JavaAccess.Predicates.*;
+import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.*;
+import static com.tngtech.archunit.lang.conditions.ArchConditions.*;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 
 /**
@@ -57,4 +60,10 @@ class ArchitectureTest {
 
     @ArchTest
     static final ArchRule READ_RESOLVE_SHOULD_BE_PROTECTED = ArchitectureRules.READ_RESOLVE_SHOULD_BE_PROTECTED;
+
+    @ArchTest
+    static final ArchRule USE_INTEGER_PARSER = noClasses().should()
+            .callCodeUnitWhere(targetOwner(fullyQualifiedName(Integer.class.getName())).and(name("parseInt")))
+            .because("Use the fail-save alternative IntegerParser#parseInt implementation");
+
 }
